@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">  
+    
+    <link rel="stylesheet" href="style.css">
+    <title>James Porter G00327095 Lab 1</title>
+   
+</head>
+<body>
+    
+    <canvas id="canvas" height="400px" width="400px"></canvas>
+    
+</body>
+<script>
+///////////////////////////////////////////////////////////////////
+
+// G00327095 James Porter .
+// Graphics Programming - Lab 1 PAC-MAN
+
+///////////////////////////////////////////////////////////////////
+
+window.onload = () => {
+
+//Setup Canvas
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+var h = canvas.height / 2;
+var w = canvas.width / 2;
+ctx.canvas.height = 500;
+ctx.canvas.width = 500;
+
+// Draw My Name
+function drawName() {
+    ctx.font = "2em Times New Roman";
+    ctx.fillStyle = "#000"
+    ctx.fillText("James Porter Lab 1", 70, 50);
+}
+
+
+
+
+//Blue Rectangle//
+function drawBlueRect() {
+    ctx.fillStyle = "rgba(51, 136, 255, 0.6)";
+    ctx.strokeStyle = "rgba(186, 74, 0, 0.7)";
+    ctx.strokeRect(100, 150, 201, 101);
+    ctx.fillRect(100, 150, 200, 100);
+}
+
+//Red Rectangle//
+function drawRedRect() {
+    ctx.fillStyle = "rgba(255, 0, 0, 0.6)";
+    ctx.strokeStyle = "rgba(186, 74, 0, 0.7)";
+    ctx.strokeRect(80, 130, 201, 101);
+    ctx.fillRect(80, 130, 200, 100);
+}
+
+
+
+
+//Yellow Circle//
+function drawYellowCircle() {
+    ctx.beginPath();
+    ctx.arc(80, 250, 50, 0, 2 * Math.PI);
+    ctx.fillStyle = "rgba(255, 224, 51, 0.66)";
+    ctx.fill();
+    ctx.stroke();
+}
+
+
+//Pink Circle//
+function drawPinkCircle() {
+    ctx.beginPath();
+    ctx.arc(350, 250, 50, 0, 2 * Math.PI);
+    ctx.fillStyle = "rgba(255, 51, 218, 0.8)";
+    ctx.fill();
+    ctx.stroke();
+}
+
+//Triangle//
+function drawTri() {
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.beginPath();
+    ctx.moveTo(220, 200);
+    ctx.lineTo(100, 300);
+    ctx.lineTo(350, 300);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillStyle = "rgba(51, 255, 167, 0.64)";
+    ctx.fill();
+
+}
+//Draw Other Triangle
+function drawOtherTri() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.beginPath();
+    ctx.moveTo(220 + 100, 200);
+    ctx.lineTo(100 + 100, 300);
+    ctx.lineTo(350 + 100, 300);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillStyle = "rgba(51, 255, 167, 0.64)";
+    ctx.fill();
+    drawShapes();
+}
+
+//Orange Circle//
+function drawOrangeCircle() {
+    ctx.beginPath();
+    ctx.arc(220, 350, 50, 0, 2 * Math.PI);
+    ctx.fillStyle = "rgba(255, 106, 0, 0.6)";
+    ctx.fill();
+    ctx.stroke();
+
+    //Green Square within Orange Circle//
+    ctx.fillStyle = "rgba(141, 255, 93  ,0.70)";
+    ctx.fillRect(185, 315, 71, 71);
+}
+//Pac Man
+function drawPacMan() {
+
+    //Radius
+    var r = 50;
+    // PI / 4
+    var startAngle = Math.PI / 4;
+    // (Math.PI(7/4))
+    var endAngle = 7 / 4 * Math.PI;
+    //Cartesian X
+    var cartX = r * Math.cos(startAngle);
+    //Cartesian Y
+    var cartY = r * Math.sin(startAngle);
+
+    //Log Cartesian X
+    console.log(cartX);
+    //Log Cartesian Y
+    console.log(cartY);
+
+    //Draw Pac-Man
+    ctx.beginPath();
+    ctx.arc(h, w, r, startAngle, endAngle);
+    ctx.lineTo(h, w);
+    ctx.lineTo(h + cartX, w + cartY);
+    ctx.fillStyle = "rgba(255,224,51,1)";
+    ctx.fill();
+    ctx.stroke();
+}
+// Draw all the Shapes
+function drawShapes() {
+    drawName();
+    drawBlueRect();
+    drawYellowCircle();
+    drawOrangeCircle();
+    drawPinkCircle();
+    drawRedRect();
+    drawPacMan();
+}
+// Draw all the Shapes
+drawShapes();
+//Draw the Triangle
+drawTri();
+//Draw the triangle in the other posistion after 3 seconds
+window.setTimeout(drawOtherTri, 3000);
+
+
+
+
+
+}</script>
+</html>

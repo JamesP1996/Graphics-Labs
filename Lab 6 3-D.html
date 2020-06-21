@@ -1,0 +1,153 @@
+<html>
+
+<head>
+  <title>Lab 6 G00327095</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 style="text-align: center; background-color:black; color: crimson;">
+    James Porter G00327095 Lab 6 
+  </h1>
+  <script src="https://threejs.org/build/three.js"></script>
+  <script>
+    //Variables for Later Movement
+    var x = -45;
+    var y = -5;
+    var xSpeed = 0.15;
+    var ySpeed = 0.15;
+
+    // Create Scene
+    var scene = new THREE.Scene();
+
+    //Create a Perspective Camera
+    var camera = new THREE.PerspectiveCamera(
+      80,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    //Add Helper Camera
+    var helper = new THREE.CameraHelper(camera);
+    scene.add(helper);
+
+    // Set up Renderer
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Ball Geometry/Material
+    var geometry = new THREE.SphereGeometry(5, 32, 32);
+    var material = new THREE.MeshLambertMaterial({
+      color: 0xffff00,
+
+    });
+    // Create Ball<sphere>
+    var sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    // Overlap WireFrame
+    var materialTWO = new THREE.LineBasicMaterial({
+      color: "yellow",
+      linewidth: 2
+    });
+    var geometryTWO = new THREE.EdgesGeometry(sphere.geometry);
+    var wireframe = new THREE.LineSegments(geometryTWO, materialTWO);
+
+    //Add WireFrame to Sphere
+    sphere.add(wireframe);
+
+    //Create and Add a Directional Light with castshadow property enabled
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
+    directionalLight.position.set(0, 1, 2);
+    scene.add(directionalLight);
+    directionalLight.castShadow = true;
+
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(100, 1000, 100);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
+
+
+
+    // Create a Plane with a base of white
+    var geometry = new THREE.PlaneGeometry(100, 20, 10);
+    var material = new THREE.MeshBasicMaterial({
+      color: 'white',
+      side: THREE.DoubleSide
+    });
+    var plane = new THREE.Mesh(geometry, material);
+    scene.add(plane);
+
+    //Create a Transparent Cube
+    var geometry = new THREE.BoxGeometry(10, 10, 1);
+    var material = new THREE.MeshBasicMaterial({
+      color: 0x00ff00
+    });
+    var cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    cube.recieveShadow = true;
+    cube.castShadow = true;
+    cube.material.transparent = true;
+    cube.material.opacity = 0.3;
+
+    //Cast Shadow on Sphere
+    sphere.castShadow = true;
+    sphere.recieveShadow = false;
+
+    // Zoom Out Camera
+    camera.position.z = 60;
+
+
+
+    //Animate Scene 
+    var animate = function () {
+      requestAnimationFrame(animate);
+
+      //Rotate Sphere
+      sphere.rotateX(Math.PI / 2 / 180);
+      sphere.rotateY(Math.PI / 2 / 180);
+
+      //// Set Sphere posistion to variable X , Y
+      sphere.position.x = x;
+      sphere.position.y = y;
+      x = x + xSpeed;
+      y = y + ySpeed;
+
+      //Conditionals for when ball hits edge of plane
+      if (x >= 45) {
+        xSpeed = xSpeed * -1;
+
+      }
+      if (x <= -45) {
+        xSpeed = xSpeed * -1;
+      }
+      if (y >= -5) {
+        ySpeed = ySpeed * -1;
+      }
+      if (y <= 5) {
+        ySpeed = ySpeed * -1;
+      }
+
+      //Change Ball Color over Time
+      sphere.material.color.offsetHSL(0.0008, 0, 0);
+
+      //Render the Scene and the Camera
+      renderer.render(scene, camera);
+    };
+
+    //Call Animation Function
+    animate();
+  </script>
+</body>
+
+</html>

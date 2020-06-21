@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>D3.js Demo</title>
+   <meta charset="UTF-8">
+   <style type="text/css"></style>
+
+   <script src="https://d3js.org/d3.v5.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+</head>
+
+<body>
+   <script type="text/javascript">
+
+      // Grab Data from JSON blob
+      $.getJSON("https://jsonblob.com/api/12e1ecbf-fa29-11e9-a508-23acf101064c", function (data) {
+         console.log(data);
+         plotCurrencyData(data);
+      });
+
+      //Executed Once
+      function plotCurrencyData(data) {
+         //Setup SVG Size and Margins
+         var margin = { top: 50, right: 50, bottom: 50, left: 50 };
+         width = 900 - margin.left - margin.right,
+            height = 670 - margin.top - margin.bottom;
+
+         //Parse the Data
+         var parseDate = d3.timeParse("%d/%m/%Y");
+
+         //Make X = Scale Time within the Range of Width
+         var x = d3.scaleTime()
+            .domain(d3.extent(data, function (d) { return parseDate(d["Date"]); }))
+            .range([0, width]);
+
+         //Make Y = Scale Time within the Range of the Height
+         var y = d3.scaleLinear()
+            .domain(d3.extent(data, function (d) { return d["GBP/EUR"] }))
+            .range([height, 0]);
+
+
+         //xAxis = X with 12 line ticks
+         var xAxis = d3.axisBottom(x)
+            .ticks(12);
+         //yAxis = Y with 12 line ticks
+         var yAxis = d3.axisLeft(y)
+            .ticks(12);
+
+
+
+         //Setup Value Line
+         var valueline = d3.line()
+            .x(function (d) { return x(parseDate(d["Date"])); })
+            .y(function (d) { return y(d["GBP/EUR"]); });
+
+
+         //Append a SVG
+         var svg = d3.select('body')
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            //Translate it
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+         //Append xAxis
+         svg.append('g')
+            .style("font", "16px times")
+            .attr("transform", "translate(0," + height + ")")
+            .attr('class', 'x axis')
+            .call(xAxis);
+
+         //Append yAxis
+         svg.append('g')
+            .style("font", "16px times")
+            .attr('class', 'y axis')
+            .call(yAxis);
+
+         //Append Text Year
+         svg.append('text')
+
+            .attr('text-anchor', 'end')
+            .attr('y', height + margin.bottom)
+            .attr('x', width / 2)
+            .text('Year');
+
+         //Append Text GBP/EUR
+         svg.append('text')
+            .attr('text-anchor', 'end')
+            .attr('y', 0 - margin.top / 2)
+            .attr('x', margin.left / 2)
+            .text('GBP/EUR');
+         //Append Path Line Data
+         svg.append("path")
+            .attr("d", valueline(data))
+            .attr("stroke", "#ff0000")
+            .attr("fill", "none");
+
+
+      }
+
+   </script>
+</body>

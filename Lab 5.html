@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style type="text/css">
+        .rect1 {
+            fill: aquamarine;
+            stroke: black;
+        }
+
+
+
+        .text {
+            stroke: aliceblue;
+            font-style: oblique;
+            stroke-width: 0.4px;
+        }
+
+        .triangle1 {
+            fill: yellowgreen;
+            stroke: black;
+        }
+
+        .pac {
+
+            fill: yellow;
+            stroke: black;
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="800px" height="1200px">
+
+
+        Drawing Shapes
+        <rect class="rect1" width="50" height="50" />
+        <circle class="circle1" fill="orange" stroke="black" id="cir" cx="50" cy="50" r="40" />
+        <text class="text" x="20" y="20" font-family="sans-serif" font-size="22px">James Porter! Lab 5 </text>
+        <polygon class="triangle1" points="100 10, 10 200, 200,200" />
+
+        Drawing PacMan  Move to 140,150 Arc x axis 50 50 no large arc sweep 140 110
+        <path class="pac" d="
+        M 140 150 
+        A 50 50 0 1 1 140 110 
+        L 90 130 
+        Z
+        "></path>
+
+    </svg>
+
+
+    </svg>
+    <script type="text/javascript">
+        //Select Circle Element
+        var circle = document.querySelector('.circle1');
+        console.log(circle);
+
+        //Function to Move Circle Element on a Loop
+        function moveCir() {
+            var x = parseFloat(circle.getAttributeNS(null, 'cx'));
+            circle.setAttributeNS(null, 'cx', x + 20);
+            if (x > 200) {
+                clearInterval(id);
+                circle.setAttributeNS(null, 'cx', x - 200);
+                circle.setAttributeNS(null, 'fill', " #85C1E9 ");
+                var id2 = setInterval(moveCir, 1000);
+            }
+        }
+        // Start the Interval
+        var id = setInterval(moveCir, 1000);
+    </script>
+
+</body>
+
+</html>

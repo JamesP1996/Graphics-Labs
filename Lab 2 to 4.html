@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Canvas</title>
+
+  <style type="text/css">
+    canvas {
+      border: 1px solid grey;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<h1 style="color: red"> James Porter</h1>
+<h4> Lab 3 G00327095</h4>
+  <canvas id="canvas-for-ball" height="500" width="500"></canvas>
+
+  <script type="text/javascript">
+    // Ball Variables
+
+    var verticleVel = 0;
+    var horizontalVel = 0;
+
+    var y = 125;
+    var x = 125;
+    var ySpeed = 0.7;
+    var radius = 20;
+    var xSpeed = 0.9;
+
+
+    var rotation = 0;
+    var spinamt = 0.08;
+
+    // Gets a handle to the element with id canvasOne.
+    var canvas = document.getElementById("canvas-for-ball");
+    // Get a 2D context for the canvas.
+    var ctx = canvas.getContext("2d");
+    // Make the fill style red.
+    ctx.fillStyle = "rgb(255, 0, 0)";
+
+    // Add a Javascript event listener to the keypress event.
+    window.addEventListener("keypress", function (event) {
+      // Just log the event to the console.
+      // console.log(event);
+    });
+
+    //keypresses with jQuery
+    $(document.body).on("keydown", function (e) {
+      //console.log(e.which);
+      switch (e.which) {
+
+        // W Key Press
+        case 87:
+
+          verticleVel = verticleVel - 0.01;
+
+          break;
+          //A Key Press
+        case 65:
+
+          horizontalVel = horizontalVel - 0.01;
+
+          break;
+          //S Key Press
+        case 83:
+
+          verticleVel = verticleVel + 0.01;
+
+          break;
+          //D key Press
+        case 68:
+
+          horizontalVel = horizontalVel + 0.01;
+
+          break;
+          // R Key Press
+        case 82:
+          spinamt = spinamt + 0.05;
+          break;
+          // T Key Press
+        case 84:
+          spinamt = spinamt - 0.05;
+          break;
+
+      }
+    });
+
+
+    class Ball {
+      constructor(x, y, xSpeed, ySpeed, Radius) {
+        this.x = x;
+        this.y = y;
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.radius = radius;
+      }
+
+      // Draw the ball (stroked, not filled).
+      drawBall() {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+      }
+
+
+      drawPeace() {
+        var cx;
+        var cy;
+
+        //Circle
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+
+        //Left Bottom Line
+        cx = radius * Math.cos((Math.PI * (5 / 4) + rotation));
+        cy = radius * Math.sin((Math.PI * (5 / 4) + rotation));
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + cx, y - cy);
+
+        //Right Bottom Line 
+        cx = radius * Math.cos(Math.PI * (7 / 4) + rotation);
+        cy = radius * Math.sin(Math.PI * (7 / 4) + rotation);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + cx, y - cy);
+
+        //Line Up
+        cx = radius * Math.cos(Math.PI * 1 / 2 + rotation);
+        cy = radius * Math.sin(Math.PI * 1 / 2 + rotation);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + cx, y - cy);
+
+        //Line Down
+        cx = radius * Math.cos(Math.PI * (3 / 2) + rotation);
+        cy = radius * Math.sin(Math.PI * (3 / 2) + rotation);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + cx, y - cy);
+
+        ctx.stroke();
+      }
+      //Rotate the Ball
+      rotate() {
+
+        rotation += spinamt;
+
+      }
+
+      //Move the Ball and Ensure it stays within Canvas boundaries
+      moveBall() {
+        y += ySpeed;
+        x += xSpeed;
+
+        ySpeed = ySpeed + verticleVel;
+
+        xSpeed = xSpeed + horizontalVel;
+
+        if (x >= ctx.canvas.width - radius) {
+          xSpeed = xSpeed * -1;
+        }
+        if (x <= 0 + radius) {
+          xSpeed = xSpeed * -1;
+        }
+        if (y >= ctx.canvas.height - radius) {
+          ySpeed = ySpeed * -1;
+        }
+
+        if (y <= 0 + radius) {
+          ySpeed = ySpeed * -1;
+        }
+
+        //console.log(`x = ${x} y = ${y}`);
+      }
+      
+    }
+
+    // Put Ball where User clicks and reset Values
+    canvas.addEventListener("dblclick", function (event) {
+      //event.clientX - this.offsetLeft,
+      //event.clientY - this.offsetTop
+
+      x = event.clientX - this.offsetLeft;
+      y = event.clientY - this.offsetTop;
+      rightVel = 0;
+      horizontalVel
+        = 0;
+      verticleVel = 0;
+      spinamt = 0.08;
+      ySpeed = 0.3;
+      xSpeed = 0.3;
+    });
+
+    // A function to repeat every time the animation loops.
+    function repeatme() {
+      console.log(`Downwards Vel ${verticleVel} horizontalVel ${horizontalVel}`);
+     
+      //Clear First
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      
+      
+
+      // Make a Ball Instance Object based off the Ball Class
+      var ball = new Ball(x, y, xSpeed, ySpeed, radius);
+      
+
+
+      //Draw The Ball
+      ball.drawPeace();
+     
+
+
+      //Make the Ball Move
+      ball.moveBall();
+
+
+      ball.rotate();
+
+
+
+      //Request a Animation Frame of Repeat Me
+      window.requestAnimationFrame(repeatme);
+    }
+
+    // Get the animation going.
+    repeatme();
+  </script>
+
+<footer>
+<b>W</b> = Upward Vel ,
+<b>S</b> = Downward Vel,
+<b>A</b> = Left vel ,
+<b>D</b> = Right Vel ,
+<b>R</b> = Spin Clockwise ,
+<b>T</b> = Spin Anti-ClockWise
+</footer>
+</body>
+
+</html>
